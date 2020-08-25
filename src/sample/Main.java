@@ -14,8 +14,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private int screenWidth = 800;
-    private int screenHeight = 800;
+    private int screenWidth = 600;
+    private int screenHeight = 700;
 
     public int mode = 0;
 
@@ -58,13 +58,30 @@ public class Main extends Application {
     }
 
     public javafx.event.EventHandler<MouseEvent> updateGraphics(Stage primaryStage) {
-        if (mode == 0) {
-            return null;
+        if (mode == 2) {
+            primaryStage.setScene(mode0());
         } else if (mode == 1) {
+            Group g = new Group();
+
             primaryStage.setScene(WQUPCl.getScene());
         }
-
+        System.out.println(mode);
         return null;
+    }
+
+    private Scene mode0() {
+        Rectangle QuickUnion = new Rectangle();
+        QuickUnion.setX(350);
+        QuickUnion.setY(50);
+        QuickUnion.setWidth(100);
+        QuickUnion.setHeight(50);
+        QuickUnion.setFill(Color.color(0, 1, 1));
+        Text quickUnionText = new Text("Quick Union");
+        quickUnionText.setX(360);
+        quickUnionText.setY(80);
+        Group group = new Group(QuickUnion, quickUnionText);
+        Scene j = new Scene(group, screenWidth, screenHeight);
+        return j;
     }
 
     public javafx.event.EventHandler<MouseEvent> chooseAlgorithm(Stage primaryStage, int pick) {
