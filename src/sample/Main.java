@@ -1,15 +1,7 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Parent;
-import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -19,86 +11,43 @@ public class Main extends Application {
 
     public int mode = 0;
 
-    private drawWQUPC WQUPCl = new drawWQUPC(10, 10, screenWidth, screenHeight);;
+    private quickUnionScene quickUnionScene;
+
+    private mainMenuScene mainMenuScene = new mainMenuScene(screenWidth, screenHeight);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Algorithm Visualizer");
-        //primaryStage.setScene(new Scene(root, 500, 500));
 
-        //drawWQUPC grid = new drawWQUPC(10, 10, 500, 500);
+        primaryStage.setScene(mainMenuScene.getScene());
 
+        primaryStage.addEventFilter(MouseEvent.MOUSE_MOVED, mainMenuSelect(primaryStage, 99));
 
-        //grid.addStage(primaryStage);
-
-        //primaryStage.setScene(grid.getScene());
-
-        Rectangle QuickUnion = new Rectangle();
-        QuickUnion.setX(350);
-        QuickUnion.setY(50);
-        QuickUnion.setWidth(100);
-        QuickUnion.setHeight(50);
-        QuickUnion.setFill(Color.color(0, 1, 1));
-
-        Text quickUnionText = new Text("Quick Union");
-        quickUnionText.setX(360);
-        quickUnionText.setY(80);
-        updateContent(primaryStage);
-
-        Group group = new Group(QuickUnion, quickUnionText);
-        Scene j = new Scene(group, screenWidth, screenHeight);
-        primaryStage.setScene(j);
-        QuickUnion.addEventFilter(MouseEvent.MOUSE_CLICKED, chooseAlgorithm(primaryStage,0));
-        quickUnionText.addEventFilter(MouseEvent.MOUSE_CLICKED, chooseAlgorithm(primaryStage, 0));
-        primaryStage.addEventFilter(MouseEvent.MOUSE_MOVED, chooseAlgorithm(primaryStage, 99));
-        //primaryStage.addEventFilter(MouseEvent.MOUSE_MOVED, updateGraphics(primaryStage));
+        primaryStage.show();
 
     }
 
     public javafx.event.EventHandler<MouseEvent> updateGraphics(Stage primaryStage) {
-        if (mode == 2) {
-            primaryStage.setScene(mode0());
-        } else if (mode == 1) {
-            Group g = new Group();
-
-            primaryStage.setScene(WQUPCl.getScene());
+        if (mode == 0) {
+            primaryStage.setScene(mainMenuScene.getScene());
+            setupNode(primaryStage, mainMenuScene.getSelection());
         }
-        System.out.println(mode);
+        if (mode == 1) {
+            primaryStage.setScene(quickUnionScene.getScene());
+            if (quickUnionScene.checkReturnToMenu()) {
+                setupNode(primaryStage, 0);
+            }
+        }
         return null;
     }
 
-    private Scene mode0() {
-        Rectangle QuickUnion = new Rectangle();
-        QuickUnion.setX(350);
-        QuickUnion.setY(50);
-        QuickUnion.setWidth(100);
-        QuickUnion.setHeight(50);
-        QuickUnion.setFill(Color.color(0, 1, 1));
-        Text quickUnionText = new Text("Quick Union");
-        quickUnionText.setX(360);
-        quickUnionText.setY(80);
-        Group group = new Group(QuickUnion, quickUnionText);
-        Scene j = new Scene(group, screenWidth, screenHeight);
-        return j;
-    }
-
-    public javafx.event.EventHandler<MouseEvent> chooseAlgorithm(Stage primaryStage, int pick) {
-        //EventHandler<MouseEvent> chosenAlgorithm = null;
-        //drawWQUPC WQUPCl = new drawWQUPC(10, 10, 500, 500);
-
-        if (pick == 0) {
+    public javafx.event.EventHandler<MouseEvent> mainMenuSelect(Stage primaryStage, int pick) {
+        if (pick != 99) {
             return mouseEvent -> {
-                mode = 1;
-                primaryStage.setScene(WQUPCl.getScene());
-                //updateContent(primaryStage);
+                setupNode(primaryStage, pick);
             };
-
-        } else if (pick == 1) {
-            return mouseEvent ->
-                    System.out.println("EmptyAlgo1");
-        } else if (pick == 99) {
+        }
+        if (pick == 99) {
             return mouseEvent -> {
                 updateGraphics(primaryStage);
             };
@@ -107,9 +56,37 @@ public class Main extends Application {
         return null;
     }
 
+    /**Resets each scene as if opening for the first time
+     * @param primaryStage Stage
+     * @param selection Scene to setup and display next
+     *                  0 = Main Menu
+     *                  1 = Quick Union
+     */
+    private void setupNode(Stage primaryStage, int selection) {
+        if (selection == 0) {
+            setupMainMenu(primaryStage);
+        }
+        if (selection == 1) {
+            setupQuickUnion(primaryStage);
+        }
+    }
 
-    public void updateContent(Stage primaryStage) {
-        primaryStage.show();
+    /**Sets up the mainMenu selection scene
+     * @param primaryStage Stage
+     */
+    private void setupMainMenu(Stage primaryStage) {
+        mainMenuScene = new mainMenuScene(screenWidth, screenHeight);
+        primaryStage.setScene(mainMenuScene.getScene());
+        mode = 0;
+    }
+
+    /**Sets up the QuickUnion Interactive Display scene
+     * @param primaryStage Stage
+     */
+    private void setupQuickUnion(Stage primaryStage) {
+        quickUnionScene = new quickUnionScene(10, 10, screenWidth, screenHeight);
+        primaryStage.setScene(quickUnionScene.getScene());
+        mode = 1;
     }
 
 
