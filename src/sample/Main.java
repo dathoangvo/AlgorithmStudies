@@ -6,10 +6,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private int screenWidth = 600;
-    private int screenHeight = 700;
+    private int screenWidth = 1920;
+    private int screenHeight = 1080;
 
-    public int mode = 0;
+    public int mode = 99;
 
     private quickUnionScene quickUnionScene;
 
@@ -19,7 +19,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Algorithm Visualizer");
 
-        primaryStage.setScene(mainMenuScene.getScene());
+        //primaryStage.setScene(mainMenuScene.getScene());
+        primaryStage.setScene(new windowDimension().getScene());
 
         primaryStage.addEventFilter(MouseEvent.MOUSE_MOVED, mainMenuSelect(primaryStage, 99));
 
@@ -84,7 +85,7 @@ public class Main extends Application {
      * @param primaryStage Stage
      */
     private void setupQuickUnion(Stage primaryStage) {
-        quickUnionScene = new quickUnionScene(10, 10, screenWidth, screenHeight);
+        quickUnionScene = new quickUnionScene(40, 40, screenWidth, screenHeight);
         primaryStage.setScene(quickUnionScene.getScene());
         mode = 1;
     }
@@ -92,6 +93,5 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
     }
 }

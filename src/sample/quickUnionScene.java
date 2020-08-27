@@ -37,7 +37,7 @@ public class quickUnionScene {
 
         group = new Group(updateGrid());
         group.getChildren().add(menuBar());
-        group.getChildren().add(backButton());
+        group.getChildren().add(new backButton(0, 0).getButton());
         group.getChildren().addAll(updatePosition());
 
         scene = new Scene(group, screenWidth, screenHeight);
@@ -47,28 +47,33 @@ public class quickUnionScene {
 
     private Rectangle menuBar() {
         Rectangle returnRect = new Rectangle();
-        returnRect.setFill(Color.color(.1, .1, .2));
+        returnRect.setFill(Color.color(1, 1, 1));
         returnRect.setX(0);
         returnRect.setY(0);
         returnRect.setWidth(screenWidth);
-        returnRect.setHeight(100);
+        returnRect.setHeight(100 - 2);
 
         //returnRect.addEventFilter(MouseEvent.MOUSE_CLICKED, menuEvent(0));
 
         return returnRect;
     }
 
+    /*
     private Polygon backButton() {
         Polygon backButton = new Polygon();
         backButton.getPoints().addAll(
-                50.0, 20.0,
-                20.0,50.0,
-                50.0, 80.0,
-                100.0, 40.0,
-                100.0, 70.0);
+                50.0, 50.0,
+                    100.0, 30.0,
+                    100.0, 40.0,
+                    150.0, 40.0,
+                    150.0, 60.0,
+                    100.0, 60.0,
+                    100.0, 70.0);
 
         return backButton;
     }
+
+     */
 
     public EventHandler<MouseEvent> menuEvent(int action) {
         if (action == 0) {
@@ -103,7 +108,7 @@ public class quickUnionScene {
 
             gridPosition[i].setX(horizontal * (int) (screenWidth / gridWidth) + 20);
             gridPosition[i].setY(vertical * (int) ((screenHeight - 100) / gridHeight) + 120);
-
+            gridPosition[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event(i));
             horizontal++;
         }
 
