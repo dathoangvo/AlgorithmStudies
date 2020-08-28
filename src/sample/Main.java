@@ -5,55 +5,45 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    private int screenWidth;
+    private int screenHeight;
+    public String currentScene;
 
-    private int screenWidth = 1920;
-    private int screenHeight = 1080;
+    private sceneMainMenu sceneMainMenu;
+    private sceneQuickUnion sceneQuickUnion;
 
-    public int mode = 99;
 
-    private quickUnionScene quickUnionScene;
-
-    private mainMenuScene mainMenuScene = new mainMenuScene(screenWidth, screenHeight);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Algorithm Visualizer");
+        currentScene = "mainMenu";
+        screenWidth = 1280;
+        screenHeight = 800;
+        sceneMainMenu = new sceneMainMenu(screenWidth, screenHeight);
+        primaryStage.setScene(sceneMainMenu.getScene());
 
-        //primaryStage.setScene(mainMenuScene.getScene());
-        primaryStage.setScene(new windowDimension().getScene());
-
-        primaryStage.addEventFilter(MouseEvent.MOUSE_MOVED, mainMenuSelect(primaryStage, 99));
+        primaryStage.addEventFilter(MouseEvent.MOUSE_MOVED, updateOnMouseMovement1(primaryStage));
 
         primaryStage.show();
 
     }
 
+    public javafx.event.EventHandler<MouseEvent> updateOnMouseMovement1(Stage primaryStage) {
+        return mouseEvent -> updateGraphics(primaryStage);
+    }
+
     public javafx.event.EventHandler<MouseEvent> updateGraphics(Stage primaryStage) {
-        if (mode == 0) {
-            primaryStage.setScene(mainMenuScene.getScene());
-            setupNode(primaryStage, mainMenuScene.getSelection());
+        if (currentScene.equals("mainMenu")) {
+            primaryStage.setScene(sceneMainMenu.getScene());
+            setupNode(primaryStage, sceneMainMenu.getSelection());
         }
-        if (mode == 1) {
-            primaryStage.setScene(quickUnionScene.getScene());
-            if (quickUnionScene.checkReturnToMenu()) {
+        if (currentScene.equals("quickUnion")) {
+            primaryStage.setScene(sceneQuickUnion.getScene());
+            if (sceneQuickUnion.checkReturnToMenu()) {
                 setupNode(primaryStage, 0);
             }
         }
-        return null;
-    }
-
-    public javafx.event.EventHandler<MouseEvent> mainMenuSelect(Stage primaryStage, int pick) {
-        if (pick != 99) {
-            return mouseEvent -> {
-                setupNode(primaryStage, pick);
-            };
-        }
-        if (pick == 99) {
-            return mouseEvent -> {
-                updateGraphics(primaryStage);
-            };
-        }
-
         return null;
     }
 
@@ -76,22 +66,23 @@ public class Main extends Application {
      * @param primaryStage Stage
      */
     private void setupMainMenu(Stage primaryStage) {
-        mainMenuScene = new mainMenuScene(screenWidth, screenHeight);
-        primaryStage.setScene(mainMenuScene.getScene());
-        mode = 0;
+        sceneMainMenu = new sceneMainMenu(screenWidth, screenHeight);
+        primaryStage.setScene(sceneMainMenu.getScene());
+        currentScene = "mainMenu";
     }
 
     /**Sets up the QuickUnion Interactive Display scene
      * @param primaryStage Stage
      */
     private void setupQuickUnion(Stage primaryStage) {
-        quickUnionScene = new quickUnionScene(40, 40, screenWidth, screenHeight);
-        primaryStage.setScene(quickUnionScene.getScene());
-        mode = 1;
+        sceneQuickUnion = new sceneQuickUnion(32, 20, screenWidth, screenHeight);
+        primaryStage.setScene(sceneQuickUnion.getScene());
+        currentScene = "quickUnion";
     }
 
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }
